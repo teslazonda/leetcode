@@ -29,25 +29,25 @@ Output: [1,1,2,3,4,4]
 # @param {ListNode} list2
 # @return {ListNode}
 def merge_two_lists(list1, list2)
-    dummy = ListNode.new(nil,nil)
-    tail = dummy
-    while list1 && list2
-        if list1.val < list2.val
-            tail.next = list1
-            list1 = list1.next
-        else
-            tail.next = list2
-            list2 = list2.next
-        end
-        tail = tail.next
+  dummy = ListNode.new(nil,nil)
+  tail = dummy
+  while list1 && list2
+    if list1.val < list2.val
+      tail.next = list1
+      list1 = list1.next
+    else
+      tail.next = list2
+      list2 = list2.next
+    end
+    tail = tail.next
 
-    end
-    if list1
-        tail.next = list1
-    elsif list2
-        tail.next = list2
-    end
-    return dummy.next
+  end
+  if list1
+    tail.next = list1
+  elsif list2
+    tail.next = list2
+  end
+  dummy.next
 end
 
 # Returning dummy.next because dummy starts with nil values that terminate the linked list.

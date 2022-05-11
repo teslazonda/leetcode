@@ -23,36 +23,37 @@
 # Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
 # Output: false
 
+# @param {Character[][]} board
+# @param {String} word
+# @return {Boolean}
 def exist(board, word)
-  return false if board.empty? || word.empty?
+  return false if board.flatten.uniq.length < word.chars.uniq.length
 
-  m = board.length
-  n = board[0].length
-  @board = board
-  @word = word
-  (0...m).each do |i|
-    (0...n).each do |j|
-      return true if word_exists?(i, j, 0)
+  row_length = board.length
+  col_length = board[0].length
+
+  row_length.times do |row|
+    col_length.times do |col|
+      return true if word_exists(board, row, col, word, 0)
     end
   end
-  p board
+
   false
 end
 
-def word_exists?(i, j, wi)
-  return false if !within_bounds?(i, j) || @board[i][j] != @word[wi]
-  return true if wi == @word.length - 1
+private def word_exists(board, row, col, word, idx)
+  return true if word.length == idx
+  return false if row < 0 || row >= board.length || col < 0 || col >= board[0].length # out of bound
+  return false if board[row][col] != word[idx] # stop searching if the current character doesn't match
 
-  @board[i][j] = '*'
-  result = word_exists?(i + 1, j, wi + 1) ||
-           word_exists?(i, j + 1, wi + 1) ||
-           word_exists?(i - 1, j, wi + 1) ||
-           word_exists?(i, j - 1, wi + 1)
+  board[row][col] = '*'
 
-  @board[i][j] = @word[wi]
-  result
-end
+  right = word_exists(board, row, col + 1, word, idx + 1)
+  down = word_exists(board, row + 1, col, word, idx + 1)
+  left = word_exists(board, row, col - 1, word, idx + 1)
+  up = word_exists(board, row - 1, col, word, idx + 1)
 
-def within_bounds?(i, j)
-  i >= 0 && j >= 0 && i < @board.length && j < @board[0].length
+  board[row][col] = word[idx]
+
+  right || down || left || up
 end
